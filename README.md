@@ -25,7 +25,7 @@ The original code were debugged and tested using **ICX/ICPX** compilers in the *
 
 This repository may be updated over time and/or modified in some way. The order of files in the repository will not be subject to significant changes, but there is no guarantee of this.
 
-## Help
+## Docs
 
 To get offline **SPIR-V** of OpenCL kernels, use the **ocloc** utility in oneAPI:
 
