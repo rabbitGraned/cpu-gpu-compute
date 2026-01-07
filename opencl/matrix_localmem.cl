@@ -5,6 +5,8 @@
 * matrix_localmem OpenCL kernel
 */
 
+/* #define TILE 16 */ /*for ocloc offline compilation*/
+
 __kernel void matrixmult(__global const float* A,
                          __global const float* B,
                          __global float* C,
@@ -50,4 +52,5 @@ __kernel void matrixmult(__global const float* A,
     if (row < N && col < N) {
         C[row * N + col] = sum;
     }
+
 }
