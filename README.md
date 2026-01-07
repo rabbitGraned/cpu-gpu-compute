@@ -70,5 +70,5 @@ CPU-GPU-compute source code is licensed under the [GNU GPL v3](LICENSE).
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU General Public License for more details.
 
-    More detailed: <https://www.gnu.org/licenses/lgpl-3.0.en.html>.
+    More detailed: <https://www.gnu.org/licenses/gpl-3.0.en.html>.
 ```
