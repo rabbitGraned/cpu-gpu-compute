@@ -1,5 +1,5 @@
 # CPU-GPU-compute
-Simple examples of CPGPU-compute programs in **OpenCL/SYCL**.
+Simple examples of GPGPU-compute programs in **OpenCL/SYCL**.
 
 It is intended for research and training.
 
