@@ -52,7 +52,6 @@ cl::Device findDevice(cl_device_type type, const std::string& typeName) {
         }
 
         for (auto& device : devices) {
-            // Фильтрация по минимальной производительности
             if (device.getInfo<CL_DEVICE_MAX_COMPUTE_UNITS>() > 0) {
                 return device;
             }
@@ -62,7 +61,7 @@ cl::Device findDevice(cl_device_type type, const std::string& typeName) {
 }
 
 int main() try {
-    // Найдём устройства
+    // ГЌГ Г©Г¤ВёГ¬ ГіГ±ГІГ°Г®Г©Г±ГІГўГ 
     cl::Device gpuDevice = findDevice(CL_DEVICE_TYPE_GPU, "GPU");
     cl::Device cpuDevice = findDevice(CL_DEVICE_TYPE_CPU, "CPU");
 
@@ -168,3 +167,4 @@ catch (...) {
     std::cerr << "Unknown error occurred.\n";
     return EXIT_FAILURE;
 }
+
