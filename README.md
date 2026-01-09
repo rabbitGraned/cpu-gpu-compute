@@ -1,5 +1,5 @@
 # CPU-GPU-compute
-Simple examples of GPGPU-compute programs in **OpenCL/SYCL**.
+Simple examples of GPGPU programs in **OpenCL/SYCL**.
 
 It is intended for research and training.
 
@@ -37,7 +37,7 @@ For offline compilation via **ocloc**, don't forget to uncomment `#define TILE 1
 
 The required name for the "-device" flag can be found in the table below.
 
-### Table of names
+### Intel GPUs
 | Gen CPU | Gen GPU | Names |
 | --- | --- | --- |
 | Gen9 | Skylake, Kaby Lake, Coffee Lake | `SKL, KBL, CFL` |
