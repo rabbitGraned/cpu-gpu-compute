@@ -2,7 +2,7 @@
 * CPU-GPU-compute examples
 * License: GNU GPL v3
 * **
-* A simple SYCL application for matrix multiplication.
+* A main SYCL application for matrix multiplication.
 *
 * ICPX:    icpx sycl_matrixmult.cc -o sycl_matrix_simple.exe -fsycl -std=c++20 -DSIMPLE
 *          icpx sycl_matrixmult.cc -o sycl_matrix_private.exe -fsycl -std=c++20 -DPRIVATE
