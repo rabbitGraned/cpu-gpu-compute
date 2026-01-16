@@ -1,6 +1,15 @@
-//  Draft file
-//  License: GNU GPL v3
-//  icpx sycl_matrixmult.cc -o sycl_matrix_private -fsycl -std=c++20 -DPRIVATE -DCPU
+/*
+* CPU-GPU-compute examples
+* License: GNU GPL v3
+* **
+* A simple SYCL application for matrix multiplication.
+*
+* ICPX:    icpx sycl_matrixmult.cc -o sycl_matrix_simple.exe -fsycl -std=c++20 -DSIMPLE
+*          icpx sycl_matrixmult.cc -o sycl_matrix_private.exe -fsycl -std=c++20 -DPRIVATE
+*          icpx sycl_matrixmult.cc -o sycl_matrix_local.exe -fsycl -std=c++20 -DLOCALMEM
+* 
+*          Add -DCPU for comparison with CPU.
+*/
 
 #include <sycl/sycl.hpp>
 
@@ -13,6 +22,9 @@
 #include <string_view>
 
 #include <cstdlib>
+
+#include <algorithm>
+#include <cstring>
 
 struct Config {
     unsigned int N = 256;
@@ -96,6 +108,8 @@ int main(int argc, char* argv[]) {
 
 #if defined(PRIVATE)
         std::cout << "Uses PRIVATE memory.\n\n";
+#elif defined(SIMPLE)
+        std::cout << "Uses SIMPLE matrix.\n\n";
 #elif defined(LOCALMEM) || !(defined(PRIVATE))
         std::cout << "Uses LOCAL memory.\n\n";
 #else
@@ -119,7 +133,10 @@ int main(int argc, char* argv[]) {
             return EXIT_FAILURE;
         }
 
-        std::cout << "Selected GPU: " << selectedDevice.get_info<sycl::info::device::name>() << "\n\n";
+        std::cout << "Selected GPU: " << selectedDevice.get_info<sycl::info::device::name>() << " [" << std::hex << selectedDevice.get_info<sycl::info::device::vendor_id>() << std::dec << "]\n";
+        std::cout << "Driver version:  " << selectedDevice.get_info<sycl::info::device::driver_version>() << "\n\n";
+
+        std::cout << "SYCL runtime: " << selectedDevice.get_platform().get_info<sycl::info::platform::name>() << "\n\n";
 
         std::vector<float> hostA(matrixSize);
         std::vector<float> hostB(matrixSize);
@@ -196,6 +213,28 @@ int main(int argc, char* argv[]) {
                         int col = it.get_global_id(1);
                         accC[row * N + col] = sum(it);
                         });
+                });
+            });
+
+#elif defined(SIMPLE)
+
+        sycl::range<2> globalRange(N, N);
+
+        event = q.submit([&](sycl::handler& cgh) {
+            auto accA = bufA.get_access<sycl::access::mode::read>(cgh);
+            auto accB = bufB.get_access<sycl::access::mode::read>(cgh);
+            auto accC = bufC.get_access<sycl::access::mode::write>(cgh);
+
+            cgh.parallel_for<class SimpleMatMul>(
+                globalRange,
+                [=](sycl::id<2> idx) {
+                    int i = idx[0];
+                    int j = idx[1];
+                    float sum = 0.0f;
+                    for (int k = 0; k < N; ++k) {
+                        sum += accA[i * N + k] * accB[k * N + j];
+                    }
+                    accC[i * N + j] = sum;
                 });
             });
 
