@@ -12,7 +12,7 @@
 #include <iostream>
 #include <vector>
 
-constexpr unsigned int TILE = 16;
+constexpr unsigned int Tile = 16;
 constexpr unsigned int N = 256;
 constexpr size_t matrixSize = N * N;
 
@@ -62,28 +62,28 @@ int main() try {
         auto accB = bufB.get_access<sycl::access::mode::read>(cgh);
         auto accC = bufC.get_access<sycl::access::mode::write>(cgh);
 
-        // Local accessors for tiles
-        sycl::local_accessor<float, 2> Asub(sycl::range<2>(TILE, TILE), cgh);
-        sycl::local_accessor<float, 2> Bsub(sycl::range<2>(TILE, TILE), cgh);
+        // Local accessors for Tiles
+        sycl::local_accessor<float, 2> Asub(sycl::range<2>(Tile, Tile), cgh);
+        sycl::local_accessor<float, 2> Bsub(sycl::range<2>(Tile, Tile), cgh);
 
         cgh.parallel_for(
             sycl::nd_range<2>(
                 sycl::range<2>(N, N),         /* global range */
-                sycl::range<2>(TILE, TILE)    /* local range (work-group size) */
+                sycl::range<2>(Tile, Tile)    /* local range (work-group size) */
             ),
-            [=](sycl::nd_item<2> item) [[sycl::reqd_work_group_size(TILE, TILE)]] {
+            [=](sycl::nd_item<2> item) [[sycl::reqd_work_group_size(Tile, Tile)]] {
                 const int tx = item.get_local_id(0);
                 const int ty = item.get_local_id(1);
 
-                const int row = item.get_group(0) * TILE + tx;
-                const int col = item.get_group(1) * TILE + ty;
+                const int row = item.get_group(0) * Tile + tx;
+                const int col = item.get_group(1) * Tile + ty;
 
                 float sum = 0.0f;
 
-                const int numTiles = (N + TILE - 1) / TILE; // ceil(N / TILE)
+                const int numTiles = (N + Tile - 1) / Tile; // ceil(N / Tile)
 
                 for (int t = 0; t < numTiles; ++t) {
-                    const int k = t * TILE;
+                    const int k = t * Tile;
 
                     if (row < N && (k + ty) < N) {
                         Asub[tx][ty] = accA[row * N + (k + ty)];
@@ -101,7 +101,7 @@ int main() try {
 
                     item.barrier(sycl::access::fence_space::local_space);
 
-                    for (int k_local = 0; k_local < TILE; ++k_local) {
+                    for (int k_local = 0; k_local < Tile; ++k_local) {
                         sum += Asub[tx][k_local] * Bsub[k_local][ty];
                     }
 
